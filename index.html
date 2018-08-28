@@ -8,12 +8,12 @@
     <title>Youtube Api</title>
 </head>
 <body>
-    <h1>Youtube Api</h1>
-    <form id="text-submit-form">
+    <h1>Nostalgia Tube</h1>
+    <form id="text-submit-form" aria-label="Search for YouTube videos">
         <input type="text" id="search-term" />
         <input type="submit" value="Go" />
     </form>
-    <ul class='results'></ul>
+    <ul aria-hidden=true aria-live='polite' class='results' aria-label="search results"></ul>
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="scripts/Store.js"></script>
