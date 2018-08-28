@@ -1,3 +1,6 @@
+/* global $ */
+'use strict';
+
 const API_KEY = 'AIzaSyA9QsK_9K1SrVueoOn01HYI5VWwPaAG-4M';
 
 /*
@@ -41,18 +44,9 @@ const fetchVideos = function(searchTerm, callback) {
     part: 'snippet',
     key: API_KEY,
     q: searchTerm
-  }
+  };
   $.getJSON(BASE_URL, query, callback);
-}
-
-const callback = function(data) {
-  console.log(data)
-
 };
-
-// fetchVideos('cats', callback);
-
-
 
 /**
  * @function decorateResponse
@@ -70,12 +64,12 @@ const callback = function(data) {
 // TEST IT! Grab an example API response and send it into the function - make sure
 // you get back the object you want.
 const decorateResponse = function(response) {
-  const dataArray = response.items.map((item, index) => 
-    {id: item.id,
-    title: item.snippet.title,
-    thumbnail: item.snippet.thumbnails
-    } 
-    return dataArray;
+  return response.items.map(item => {
+    return {id: item.id.videoId,
+      title: item.snippet.title,
+      thumbnail: item.snippet.thumbnails.default.url
+    }; 
+  });
 };
 
 /**
@@ -88,8 +82,13 @@ const decorateResponse = function(response) {
 // 1. Using the decorated object, return an HTML string containing all the expected
 // TEST IT!
 const generateVideoItemHtml = function(video) {
-
+  return `<li data-id = ${video.id}>
+    <h3> ${video.title} </h3>
+    <img src=${video.thumbnail}>
+    </li>`;
 };
+
+// console.log(generateVideoItemHtml({id: 'asdf', title: 'Cats', thumbnail: 'https://i.ytimg.com/vi/N2z5dSRkv_I/default.jpg'}));
 
 /**
  * @function addVideosToStore
@@ -100,7 +99,7 @@ const generateVideoItemHtml = function(video) {
 // 1. Set the received array as the value held in store.videos
 // TEST IT!
 const addVideosToStore = function(videos) {
-
+  store.videos = videos;
 };
 
 
@@ -113,7 +112,8 @@ const addVideosToStore = function(videos) {
 // 2. Add this array of DOM elements to the appropriate DOM element
 // TEST IT!
 const render = function() {
-
+  const htmlArray = store.videos.map(generateVideoItemHtml);
+  $('.results').html(htmlArray);
 };
 
 /**
@@ -133,11 +133,20 @@ const render = function() {
 //   g) Inside the callback, run the `render` function 
 // TEST IT!
 const handleFormSubmit = function() {
-
+  $('#text-submit-form').submit(function(event){
+    event.preventDefault();
+    const searchText = $('#search-term').val();
+    $('#text-submit-form')[0].reset();
+    fetchVideos(searchText, (response) => {
+      addVideosToStore(decorateResponse(response));
+      render();
+    });
+  });
 };
 
 // When DOM is ready:
 $(function () {
   // TASK:
   // 1. Run `handleFormSubmit` to bind the event listener to the DOM
+  handleFormSubmit();
 });
