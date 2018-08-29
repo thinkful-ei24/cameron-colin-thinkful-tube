@@ -1,4 +1,4 @@
-/* global $ */
+/* global $, VideoList */
 'use strict';
 
 // const API_KEY = 'AIzaSyA9QsK_9K1SrVueoOn01HYI5VWwPaAG-4M';
@@ -152,7 +152,7 @@
 // });
 
 const main = function() {
-  VideoList.bindEventListeners()
+  VideoList.bindEventListeners();
 };
 
 $(main);
